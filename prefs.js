@@ -152,21 +152,33 @@ class Settings {
 
         this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
-        this.field_clear_history_on_interval = new Adw.SwitchRow({
-            title: _("Clear clipboard history on interval")
+        this.field_clear_history_older_than_enabled = new Adw.SwitchRow({
+            title: _("Clear history entries older than")
         });
 
-        this.field_clear_history_interval = new Adw.SpinRow({
-            title: _("History clear interval (in minutes)"),
+        this.field_clear_history_max_age = new Adw.SpinRow({
+            title: _("Max entry age (in minutes)"),
+            subtitle: _("Pinned entries are never pruned"),
             adjustment: new Gtk.Adjustment({
-            lower: 1,
-            upper: 1440,
-            step_increment: 10
+                lower: 1,
+                upper: 1440,
+                step_increment: 10
             })
         });
 
-        this.field_clear_history_on_interval.connect('notify::active', (widget) => {
-            this.field_clear_history_interval.set_sensitive(widget.active);
+        this.field_clear_history_prune_interval = new Adw.SpinRow({
+            title: _("Pruning check interval (in seconds)"),
+            subtitle: _("How often to check for old entries"),
+            adjustment: new Gtk.Adjustment({
+                lower: 10,
+                upper: 3600,
+                step_increment: 10
+            })
+        });
+
+        this.field_clear_history_older_than_enabled.connect('notify::active', (widget) => {
+            this.field_clear_history_max_age.set_sensitive(widget.active);
+            this.field_clear_history_prune_interval.set_sensitive(widget.active);
         });
 
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
@@ -188,8 +200,9 @@ class Settings {
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
         this.behavior.add(this.field_clear_on_boot);
-        this.behavior.add(this.field_clear_history_on_interval);
-        this.behavior.add(this.field_clear_history_interval);
+        this.behavior.add(this.field_clear_history_older_than_enabled);
+        this.behavior.add(this.field_clear_history_max_age);
+        this.behavior.add(this.field_clear_history_prune_interval);
 
         this.exclusion.add(this.field_exclusion_row);
         this.exclusion.add(this.field_exclusion_row_add_button);
@@ -230,12 +243,14 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_OLDER_THAN_ENABLED, this.field_clear_history_older_than_enabled, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_MAX_AGE, this.field_clear_history_max_age, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_PRUNE_INTERVAL, this.field_clear_history_prune_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-        this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
+        this.field_clear_history_max_age.set_sensitive(this.field_clear_history_older_than_enabled.active);
+        this.field_clear_history_prune_interval.set_sensitive(this.field_clear_history_older_than_enabled.active);
         this.#fetchExludedAppsList();
     }
 

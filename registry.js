@@ -23,7 +23,8 @@ export class Registry {
         for (let entry of entries) {
             const item = {
                 favorite: entry.isFavorite(),
-                mimetype: entry.mimetype()
+                mimetype: entry.mimetype(),
+                timestamp: entry.timestamp()
             };
 
             registryContent.push(item);
@@ -209,6 +210,7 @@ export class ClipboardEntry {
     #mimetype;
     #bytes;
     #favorite;
+    #timestamp;
 
     static #decode (contents) {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
@@ -223,6 +225,7 @@ export class ClipboardEntry {
     static async fromJSON (jsonEntry) {
         const mimetype = jsonEntry.mimetype || 'text/plain;charset=utf-8';
         const favorite = jsonEntry.favorite;
+        const timestamp = jsonEntry.timestamp;
         let bytes;
 
         if (ClipboardEntry.__isText(mimetype)) {
@@ -262,13 +265,22 @@ export class ClipboardEntry {
             }
         }
 
-        return new ClipboardEntry(mimetype, bytes, favorite);
+        return new ClipboardEntry(mimetype, bytes, favorite, timestamp);
     }
 
-    constructor (mimetype, bytes, favorite) {
+    constructor (mimetype, bytes, favorite, timestamp = null) {
         this.#mimetype = mimetype;
         this.#bytes = bytes;
         this.#favorite = favorite;
+        this.#timestamp = timestamp ?? Math.floor(Date.now() / 1000);
+    }
+
+    timestamp () {
+        return this.#timestamp;
+    }
+
+    resetTimestamp () {
+        this.#timestamp = Math.floor(Date.now() / 1000);
     }
 
     #encode () {

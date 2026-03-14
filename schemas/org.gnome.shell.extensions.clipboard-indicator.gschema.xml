@@ -193,27 +193,28 @@
                 A list of applications that are excluded from clipboard history.
             </description>
         </key>
-        <key name="clear-history-on-interval" type="b">
+        <key name="clear-history-older-than-enabled" type="b">
             <default>false</default>
-            <summary>Enable clearing history on interval</summary>
+            <summary>Enable clearing history entries older than a threshold</summary>
             <description>
-                If true, clipboard history will be cleared at regular intervals.
+                If true, non-pinned clipboard entries older than the configured max age will be automatically removed.
             </description>
         </key>
-        <key name="clear-history-interval" type="i">
+        <key name="clear-history-max-age" type="i">
             <default>60</default>
-            <summary>Interval for clearing history in minutes</summary>
+            <summary>Max entry age in minutes</summary>
             <description>
-                The interval in minutes at which the clipboard history will be cleared.
+                Non-pinned clipboard entries older than this many minutes will be automatically removed.
             </description>
-            <range min="1"/>
+            <range min="1" max="1440"/>
         </key>
-        <key name="next-history-clear" type="i">
-            <default>-1</default>
-            <summary>Next scheduled history clear time</summary>
+        <key name="clear-history-prune-interval" type="i">
+            <default>60</default>
+            <summary>Pruning check interval in seconds</summary>
             <description>
-                The timestamp for the next scheduled history clear.
+                How often to check for and remove old clipboard entries, in seconds.
             </description>
+            <range min="10" max="3600"/>
         </key>
         <key name="case-sensitive-search" type="b">
             <default>false</default>

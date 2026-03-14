@@ -25,9 +25,9 @@ export const PrefsFields = {
     PASTE_ON_SELECT                 : 'paste-on-select',
     CACHE_IMAGES                    : 'cache-images',
     EXCLUDED_APPS                   : 'excluded-apps',
-    CLEAR_HISTORY_ON_INTERVAL       : 'clear-history-on-interval',
-    CLEAR_HISTORY_INTERVAL          : 'clear-history-interval',
-    NEXT_HISTORY_CLEAR              : 'next-history-clear',
+    CLEAR_HISTORY_OLDER_THAN_ENABLED : 'clear-history-older-than-enabled',
+    CLEAR_HISTORY_MAX_AGE           : 'clear-history-max-age',
+    CLEAR_HISTORY_PRUNE_INTERVAL    : 'clear-history-prune-interval',
     CASE_SENSITIVE_SEARCH           : 'case-sensitive-search',
     REGEX_SEARCH                    : 'regex-search',
 };
