@@ -47,6 +47,8 @@ let CLEAR_HISTORY_MAX_AGE     = 60;
 let CLEAR_HISTORY_PRUNE_INTERVAL = 60;
 let CASE_SENSITIVE_SEARCH     = false;
 let REGEX_SEARCH              = false;
+let MIDDLE_CLICK_ACTION       = 2; // 0 = nothing, 1 = toggle private mode, 2 = clear history
+let RIGHT_CLICK_ACTION        = 1; // 0 = nothing, 1 = toggle private mode, 2 = clear history
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -972,6 +974,25 @@ const ClipboardIndicator = GObject.registerClass({
         this._historyLabel.hide();
     }
 
+    vfunc_event (event) {
+        if (event.type() === Clutter.EventType.BUTTON_PRESS) {
+            const button = event.get_button();
+            let action = -1;
+
+            if (button === 2) action = MIDDLE_CLICK_ACTION;
+            else if (button === 3) action = RIGHT_CLICK_ACTION;
+
+            if (action === 1) {
+                this.togglePrivateMode();
+                return Clutter.EVENT_STOP;
+            } else if (action === 2) {
+                this._removeAll();
+                return Clutter.EVENT_STOP;
+            }
+        }
+        return super.vfunc_event(event);
+    }
+
     togglePrivateMode () {
         this.privateModeMenuItem.toggle();
     }
@@ -1044,6 +1065,8 @@ const ClipboardIndicator = GObject.registerClass({
         CLEAR_HISTORY_PRUNE_INTERVAL = settings.get_int(PrefsFields.CLEAR_HISTORY_PRUNE_INTERVAL);
         CASE_SENSITIVE_SEARCH       = settings.get_boolean(PrefsFields.CASE_SENSITIVE_SEARCH);
         REGEX_SEARCH                = settings.get_boolean(PrefsFields.REGEX_SEARCH);
+        MIDDLE_CLICK_ACTION         = settings.get_int(PrefsFields.MIDDLE_CLICK_ACTION);
+        RIGHT_CLICK_ACTION          = settings.get_int(PrefsFields.RIGHT_CLICK_ACTION);
     }
 
     async _onSettingsChange () {

@@ -30,4 +30,6 @@ export const PrefsFields = {
     CLEAR_HISTORY_PRUNE_INTERVAL    : 'clear-history-prune-interval',
     CASE_SENSITIVE_SEARCH           : 'case-sensitive-search',
     REGEX_SEARCH                    : 'regex-search',
+    MIDDLE_CLICK_ACTION             : 'middle-click-action',
+    RIGHT_CLICK_ACTION              : 'right-click-action',
 };

@@ -226,5 +226,23 @@
             <summary>Regex-based search</summary>
             <description>Allow regex in search</description>
         </key>
+        <key type="i" name="middle-click-action">
+            <default>2</default>
+            <summary>Middle click action</summary>
+            <description>
+                Action to perform when middle-clicking the panel icon.
+                0 = Nothing, 1 = Toggle private mode, 2 = Clear history.
+            </description>
+            <range min="0" max="2"/>
+        </key>
+        <key type="i" name="right-click-action">
+            <default>1</default>
+            <summary>Right click action</summary>
+            <description>
+                Action to perform when right-clicking the panel icon.
+                0 = Nothing, 1 = Toggle private mode, 2 = Clear history.
+            </description>
+            <range min="0" max="2"/>
+        </key>
     </schema>
 </schemalist>

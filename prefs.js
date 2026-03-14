@@ -72,6 +72,16 @@ class Settings {
             title: _("Remove down arrow in top bar")
         });
 
+        this.field_middle_click_action = new Adw.ComboRow({
+            title: _("Middle click action"),
+            model: this.#createClickActionOptions()
+        });
+
+        this.field_right_click_action = new Adw.ComboRow({
+            title: _("Right click action"),
+            model: this.#createClickActionOptions()
+        });
+
         this.field_cache_disable = new Adw.SwitchRow({
             title: _("Cache only pinned items")
         });
@@ -214,6 +224,8 @@ class Settings {
         this.topbar.add(this.field_display_mode);
         this.topbar.add(this.field_topbar_preview_size);
         this.topbar.add(this.field_disable_down_arrow);
+        this.topbar.add(this.field_middle_click_action);
+        this.topbar.add(this.field_right_click_action);
 
         this.notifications.add(this.field_clear_notification_toggle);
         this.notifications.add(this.field_cycle_notification_toggle)
@@ -248,6 +260,8 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_HISTORY_PRUNE_INTERVAL, this.field_clear_history_prune_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.MIDDLE_CLICK_ACTION, this.field_middle_click_action, 'selected', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.RIGHT_CLICK_ACTION, this.field_right_click_action, 'selected', Gio.SettingsBindFlags.DEFAULT);
 
         this.field_clear_history_max_age.set_sensitive(this.field_clear_history_older_than_enabled.active);
         this.field_clear_history_prune_interval.set_sensitive(this.field_clear_history_older_than_enabled.active);
@@ -260,6 +274,19 @@ class Settings {
             _("Clipboard Content"),
             _("Both"),
             _("Neither")
+        ];
+        let liststore = new Gtk.StringList();
+        for (let option of options) {
+            liststore.append(option)
+        }
+        return liststore;
+    }
+
+    #createClickActionOptions () {
+        let options = [
+            _("Nothing"),
+            _("Toggle private mode"),
+            _("Clear history")
         ];
         let liststore = new Gtk.StringList();
         for (let option of options) {
